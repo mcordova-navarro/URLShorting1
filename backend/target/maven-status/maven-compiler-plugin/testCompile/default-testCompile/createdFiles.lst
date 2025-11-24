@@ -1,5 +1,6 @@
 domain\services\UrlServiceTest.class
 domain\services\AuthServiceTest$InMemoryUserRepositoryStub.class
 domain\services\AuthServiceTest.class
+domain\services\FinalGradeCalculatorTest.class
 infrastructure\repositories\InMemoryUrlRepositoryTest.class
 infrastructure\security\JwtServiceTest.class

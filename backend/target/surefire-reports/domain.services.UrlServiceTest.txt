@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: domain.services.UrlServiceTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s - in domain.services.UrlServiceTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s - in domain.services.UrlServiceTest

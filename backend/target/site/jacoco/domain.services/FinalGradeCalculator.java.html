@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FinalGradeCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">my-app</a> &gt; <a href="index.source.html" class="el_package">domain.services</a> &gt; <span class="el_source">FinalGradeCalculator.java</span></div><h1>FinalGradeCalculator.java</h1><pre class="source lang-java linenums">package domain.services;
+
+import domain.models.AcademicYearPolicy;
+import domain.models.Evaluation;
+import domain.models.GradeBreakdown;
+import domain.models.StudentRecord;
+
+<span class="fc" id="L8">public class FinalGradeCalculator {</span>
+
+    // Constantes de negocio (puedes ajustarlas)
+    private static final double MAX_GRADE = 20.0;
+    private static final double ATTENDANCE_PENALTY = 2.0;      // penalización si no cumple asistencia mínima
+    private static final double EXTRA_POINTS_BASE = 0.5;       // puntos extra base
+    private static final double EXTRA_POINTS_THRESHOLD = 15.0; // umbral de promedio para optar a extra
+
+    /**
+     * Cálculo determinista de la nota final de un estudiante.
+     * - promedio ponderado
+     * - penalización por inasistencia
+     * - puntos extra (posible duplicación)
+     */
+    public GradeBreakdown calculate(StudentRecord record, AcademicYearPolicy policy) {
+<span class="fc" id="L23">        double weightedAverage = computeWeightedAverage(record);</span>
+
+        // Penalización por inasistencia
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        double attendancePenalty = record.hasReachedMinimumClasses() ? 0.0 : ATTENDANCE_PENALTY;</span>
+<span class="fc" id="L27">        double gradeAfterPenalty = Math.max(0.0, weightedAverage - attendancePenalty);</span>
+
+        // Puntos extra
+<span class="fc" id="L30">        double baseExtra = 0.0;</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (policy != null</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">                &amp;&amp; policy.isExtraPointsEnabled()</span>
+<span class="fc bfc" id="L33" title="All 4 branches covered.">                &amp;&amp; record.hasReachedMinimumClasses()</span>
+                &amp;&amp; weightedAverage &gt;= EXTRA_POINTS_THRESHOLD) {
+<span class="fc" id="L35">            baseExtra = EXTRA_POINTS_BASE;</span>
+        }
+
+        // &quot;Puntos extra duplicados&quot;: aplicamos el doble de los puntos extra base
+<span class="fc" id="L39">        double duplicatedExtra = baseExtra * 2.0;</span>
+
+<span class="fc" id="L41">        double finalGrade = Math.min(MAX_GRADE, gradeAfterPenalty + duplicatedExtra);</span>
+
+<span class="fc" id="L43">        return new GradeBreakdown(weightedAverage, attendancePenalty, baseExtra, duplicatedExtra, finalGrade);</span>
+    }
+
+    private double computeWeightedAverage(StudentRecord record) {
+<span class="fc" id="L47">        double totalWeight = 0.0;</span>
+<span class="fc" id="L48">        double weightedSum = 0.0;</span>
+
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (Evaluation e : record.getEvaluations()) {</span>
+<span class="fc" id="L51">            totalWeight += e.getWeight();</span>
+<span class="fc" id="L52">            weightedSum += e.getGrade() * e.getWeight();</span>
+<span class="fc" id="L53">        }</span>
+
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (totalWeight == 0.0) {</span>
+<span class="fc" id="L56">            return 0.0;</span>
+        }
+
+        // Normalizamos a escala 0-20 asumiendo que el peso total debe ser 100
+<span class="fc" id="L60">        return weightedSum / totalWeight; // si totalWeight=100, es el promedio clásico</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

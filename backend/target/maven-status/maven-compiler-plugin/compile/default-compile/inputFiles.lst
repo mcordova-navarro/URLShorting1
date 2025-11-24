@@ -1,9 +1,14 @@
 C:\Users\Milton\.vscode\URLShorting1\backend\src\Application.java
+C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\models\AcademicYearPolicy.java
+C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\models\Evaluation.java
+C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\models\GradeBreakdown.java
+C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\models\StudentRecord.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\models\Url.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\models\User.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\repositories\UrlRepository.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\repositories\UserRepository.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\services\AuthService.java
+C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\services\FinalGradeCalculator.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\domain\services\UrlService.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\infrastructure\http\AuthController.java
 C:\Users\Milton\.vscode\URLShorting1\backend\src\infrastructure\http\dto\LoginDtos.java

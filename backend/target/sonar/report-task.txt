@@ -1,6 +1,0 @@
-projectKey=Prueba123
-serverUrl=http://213.199.42.57:9002
-serverVersion=25.10.0.114319
-dashboardUrl=http://213.199.42.57:9002/dashboard?id=Prueba123
-ceTaskId=6bc0c3b8-751f-4f12-a01e-73fa3602566b
-ceTaskUrl=http://213.199.42.57:9002/api/ce/task?id=6bc0c3b8-751f-4f12-a01e-73fa3602566b

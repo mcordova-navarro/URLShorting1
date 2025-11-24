@@ -1,10 +1,209 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Application.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">my-app</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Application.java</span></div><h1>Application.java</h1><pre class="source lang-java linenums">import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Application.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">my-app</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Application.java</span></div><h1>Application.java</h1><pre class="source lang-java linenums">import domain.models.AcademicYearPolicy;
+import domain.models.Evaluation;
+import domain.models.GradeBreakdown;
+import domain.models.StudentRecord;
+import domain.services.FinalGradeCalculator;
 
-@SpringBootApplication(scanBasePackages = {&quot;domain&quot;, &quot;infrastructure&quot;})
-<span class="nc" id="L5">public class Application {</span>
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+<span class="nc" id="L11">public class Application {</span>
+
+    // almacenamiento en memoria (sin base de datos)
+<span class="nc" id="L14">    private static final Map&lt;String, StudentRecord&gt; students = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L15">    private static final Map&lt;Integer, AcademicYearPolicy&gt; yearPolicies = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L17">    private static final FinalGradeCalculator calculator = new FinalGradeCalculator();</span>
+
     public static void main(String[] args) {
-<span class="nc" id="L7">        SpringApplication.run(Application.class, args);</span>
-<span class="nc" id="L8">    }</span>
+<span class="nc" id="L20">        try (Scanner scanner = new Scanner(System.in)) {</span>
+<span class="nc" id="L21">            runMenu(scanner);</span>
+        }
+<span class="nc" id="L23">    }</span>
+
+    private static void runMenu(Scanner scanner) {
+        while (true) {
+<span class="nc" id="L27">            System.out.println(&quot;=======================================&quot;);</span>
+<span class="nc" id="L28">            System.out.println(&quot; Sistema de Notas UTEC (Consola)&quot;);</span>
+<span class="nc" id="L29">            System.out.println(&quot;=======================================&quot;);</span>
+<span class="nc" id="L30">            System.out.println(&quot;1. Registrar/actualizar estudiante&quot;);</span>
+<span class="nc" id="L31">            System.out.println(&quot;2. Registrar evaluaciones de un estudiante&quot;);</span>
+<span class="nc" id="L32">            System.out.println(&quot;3. Registrar asistencia mínima de un estudiante&quot;);</span>
+<span class="nc" id="L33">            System.out.println(&quot;4. Registrar política de puntos extra por año académico&quot;);</span>
+<span class="nc" id="L34">            System.out.println(&quot;5. Calcular nota final y ver detalle&quot;);</span>
+<span class="nc" id="L35">            System.out.println(&quot;0. Salir&quot;);</span>
+<span class="nc" id="L36">            System.out.print(&quot;Seleccione una opción: &quot;);</span>
+
+<span class="nc" id="L38">            String option = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L39" title="All 7 branches missed.">            switch (option) {</span>
+                case &quot;1&quot;:
+<span class="nc" id="L41">                    registerOrUpdateStudent(scanner);</span>
+<span class="nc" id="L42">                    break;</span>
+                case &quot;2&quot;:
+<span class="nc" id="L44">                    registerEvaluations(scanner);</span>
+<span class="nc" id="L45">                    break;</span>
+                case &quot;3&quot;:
+<span class="nc" id="L47">                    registerAttendance(scanner);</span>
+<span class="nc" id="L48">                    break;</span>
+                case &quot;4&quot;:
+<span class="nc" id="L50">                    registerYearPolicy(scanner);</span>
+<span class="nc" id="L51">                    break;</span>
+                case &quot;5&quot;:
+<span class="nc" id="L53">                    calculateAndShowFinalGrade(scanner);</span>
+<span class="nc" id="L54">                    break;</span>
+                case &quot;0&quot;:
+<span class="nc" id="L56">                    System.out.println(&quot;Hasta luego.&quot;);</span>
+<span class="nc" id="L57">                    return;</span>
+                default:
+<span class="nc" id="L59">                    System.out.println(&quot;Opción inválida. Intente nuevamente.&quot;);</span>
+            }
+<span class="nc" id="L61">            System.out.println();</span>
+<span class="nc" id="L62">        }</span>
+    }
+
+    // 1) Registrar estudiante
+    private static void registerOrUpdateStudent(Scanner scanner) {
+<span class="nc" id="L67">        System.out.print(&quot;Código del estudiante: &quot;);</span>
+<span class="nc" id="L68">        String id = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L70">        System.out.print(&quot;Nombre del estudiante: &quot;);</span>
+<span class="nc" id="L71">        String name = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L73">        System.out.print(&quot;Año académico (ej. 2025): &quot;);</span>
+<span class="nc" id="L74">        int year = readInt(scanner);</span>
+
+<span class="nc" id="L76">        StudentRecord record = new StudentRecord(id, name, year);</span>
+<span class="nc" id="L77">        students.put(id, record);</span>
+
+<span class="nc" id="L79">        System.out.println(&quot;Estudiante registrado/actualizado correctamente.&quot;);</span>
+<span class="nc" id="L80">    }</span>
+
+    // 2) Registrar evaluaciones
+    private static void registerEvaluations(Scanner scanner) {
+<span class="nc" id="L84">        StudentRecord record = findStudent(scanner);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (record == null) {</span>
+<span class="nc" id="L86">            return;</span>
+        }
+
+<span class="nc" id="L89">        record.clearEvaluations();</span>
+
+<span class="nc" id="L91">        System.out.print(&quot;Cantidad de evaluaciones (máximo &quot; + StudentRecord.MAX_EVALUATIONS + &quot;): &quot;);</span>
+<span class="nc" id="L92">        int count = readInt(scanner);</span>
+<span class="nc bnc" id="L93" title="All 4 branches missed.">        if (count &lt; 0 || count &gt; StudentRecord.MAX_EVALUATIONS) {</span>
+<span class="nc" id="L94">            System.out.println(&quot;Cantidad inválida.&quot;);</span>
+<span class="nc" id="L95">            return;</span>
+        }
+
+<span class="nc" id="L98">        double totalWeight = 0.0;</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        for (int i = 1; i &lt;= count; i++) {</span>
+<span class="nc" id="L100">            System.out.println(&quot;--- Evaluación &quot; + i + &quot; ---&quot;);</span>
+<span class="nc" id="L101">            System.out.print(&quot;Nombre: &quot;);</span>
+<span class="nc" id="L102">            String name = scanner.nextLine().trim();</span>
+
+<span class="nc" id="L104">            System.out.print(&quot;Nota obtenida (0-20): &quot;);</span>
+<span class="nc" id="L105">            double grade = readDouble(scanner);</span>
+
+<span class="nc" id="L107">            System.out.print(&quot;Peso (%) de esta evaluación: &quot;);</span>
+<span class="nc" id="L108">            double weight = readDouble(scanner);</span>
+
+<span class="nc" id="L110">            totalWeight += weight;</span>
+<span class="nc" id="L111">            record.addEvaluation(new Evaluation(name, grade, weight));</span>
+        }
+
+<span class="nc" id="L114">        System.out.println(&quot;Evaluaciones registradas correctamente. Peso total = &quot; + totalWeight + &quot;%&quot;);</span>
+<span class="nc" id="L115">    }</span>
+
+    // 3) Registrar asistencia mínima
+    private static void registerAttendance(Scanner scanner) {
+<span class="nc" id="L119">        StudentRecord record = findStudent(scanner);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (record == null) {</span>
+<span class="nc" id="L121">            return;</span>
+        }
+
+<span class="nc" id="L124">        System.out.print(&quot;¿Cumplió la asistencia mínima? (s/n): &quot;);</span>
+<span class="nc" id="L125">        String ans = scanner.nextLine().trim().toLowerCase();</span>
+<span class="nc" id="L126">        boolean hasReached = ans.startsWith(&quot;s&quot;);</span>
+<span class="nc" id="L127">        record.setHasReachedMinimumClasses(hasReached);</span>
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        System.out.println(&quot;Asistencia mínima registrada: &quot; + (hasReached ? &quot;Sí&quot; : &quot;No&quot;));</span>
+<span class="nc" id="L130">    }</span>
+
+    // 4) Registrar política de puntos extra por año
+    private static void registerYearPolicy(Scanner scanner) {
+<span class="nc" id="L134">        System.out.print(&quot;Año académico (ej. 2025): &quot;);</span>
+<span class="nc" id="L135">        int year = readInt(scanner);</span>
+
+<span class="nc" id="L137">        System.out.print(&quot;¿Todos los docentes están de acuerdo en otorgar puntos extra este año? (s/n): &quot;);</span>
+<span class="nc" id="L138">        String ans = scanner.nextLine().trim().toLowerCase();</span>
+<span class="nc" id="L139">        boolean enabled = ans.startsWith(&quot;s&quot;);</span>
+
+<span class="nc" id="L141">        AcademicYearPolicy policy = yearPolicies.get(year);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (policy == null) {</span>
+<span class="nc" id="L143">            policy = new AcademicYearPolicy(year, enabled);</span>
+        } else {
+<span class="nc" id="L145">            policy.setExtraPointsEnabled(enabled);</span>
+        }
+<span class="nc" id="L147">        yearPolicies.put(year, policy);</span>
+
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        System.out.println(&quot;Política de puntos extra para &quot; + year + &quot;: &quot; + (enabled ? &quot;ACTIVADA&quot; : &quot;DESACTIVADA&quot;));</span>
+<span class="nc" id="L150">    }</span>
+
+    // 5) Calcular nota final y mostrar detalle
+    private static void calculateAndShowFinalGrade(Scanner scanner) {
+<span class="nc" id="L154">        StudentRecord record = findStudent(scanner);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (record == null) {</span>
+<span class="nc" id="L156">            return;</span>
+        }
+
+<span class="nc" id="L159">        AcademicYearPolicy policy = yearPolicies.get(record.getAcademicYear());</span>
+<span class="nc" id="L160">        GradeBreakdown breakdown = calculator.calculate(record, policy);</span>
+
+<span class="nc" id="L162">        System.out.println(&quot;============================&quot;);</span>
+<span class="nc" id="L163">        System.out.println(&quot;Detalle del cálculo de nota&quot;);</span>
+<span class="nc" id="L164">        System.out.println(&quot;Estudiante: &quot; + record.getStudentName() + &quot; (&quot; + record.getStudentId() + &quot;)&quot;);</span>
+<span class="nc" id="L165">        System.out.println(&quot;Año académico: &quot; + record.getAcademicYear());</span>
+<span class="nc" id="L166">        System.out.println(&quot;----------------------------&quot;);</span>
+<span class="nc" id="L167">        System.out.printf(&quot;Promedio ponderado: %.2f%n&quot;, breakdown.getWeightedAverage());</span>
+<span class="nc" id="L168">        System.out.printf(&quot;Penalización por inasistencia: %.2f%n&quot;, breakdown.getAttendancePenalty());</span>
+<span class="nc" id="L169">        System.out.printf(&quot;Puntos extra base: %.2f%n&quot;, breakdown.getBaseExtraPoints());</span>
+<span class="nc" id="L170">        System.out.printf(&quot;Puntos extra duplicados: %.2f%n&quot;, breakdown.getDuplicatedExtraPoints());</span>
+<span class="nc" id="L171">        System.out.println(&quot;----------------------------&quot;);</span>
+<span class="nc" id="L172">        System.out.printf(&quot;NOTA FINAL: %.2f%n&quot;, breakdown.getFinalGrade());</span>
+<span class="nc" id="L173">    }</span>
+
+    // --- Helpers ---
+
+    private static StudentRecord findStudent(Scanner scanner) {
+<span class="nc" id="L178">        System.out.print(&quot;Código del estudiante: &quot;);</span>
+<span class="nc" id="L179">        String id = scanner.nextLine().trim();</span>
+<span class="nc" id="L180">        StudentRecord record = students.get(id);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (record == null) {</span>
+<span class="nc" id="L182">            System.out.println(&quot;No se encontró estudiante con código &quot; + id + &quot;. Regístrelo primero.&quot;);</span>
+        }
+<span class="nc" id="L184">        return record;</span>
+    }
+
+    private static int readInt(Scanner scanner) {
+        while (true) {
+<span class="nc" id="L189">            String line = scanner.nextLine().trim();</span>
+            try {
+<span class="nc" id="L191">                return Integer.parseInt(line);</span>
+<span class="nc" id="L192">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L193">                System.out.print(&quot;Valor inválido, ingrese un entero: &quot;);</span>
+            }
+<span class="nc" id="L195">        }</span>
+    }
+
+    private static double readDouble(Scanner scanner) {
+        while (true) {
+<span class="nc" id="L200">            String line = scanner.nextLine().trim();</span>
+            try {
+<span class="nc" id="L202">                return Double.parseDouble(line);</span>
+<span class="nc" id="L203">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L204">                System.out.print(&quot;Valor inválido, ingrese un número: &quot;);</span>
+            }
+<span class="nc" id="L206">        }</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
