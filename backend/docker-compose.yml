@@ -2,7 +2,7 @@ version: '3.9'
 services:
   # Сервис для разворачивания контейнера с базой данных
   postgres:
-    container_name: postgres
+    container_name: URL
     image: postgres:12
     hostname: database
     environment:
@@ -13,6 +13,8 @@ services:
       - "5430:5432"
     networks:
       - monitoring
+
+
 
   # Сервис для разворачивания контейнера с приложением
   webapi:
@@ -42,6 +44,10 @@ services:
       timeout: 10s
     networks:
       - monitoring
+
+
+
+
 
   prometheus:
     image: prom/prometheus

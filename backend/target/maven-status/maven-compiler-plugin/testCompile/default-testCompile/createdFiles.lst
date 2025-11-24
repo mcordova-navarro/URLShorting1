@@ -1,0 +1,5 @@
+domain\services\UrlServiceTest.class
+domain\services\AuthServiceTest$InMemoryUserRepositoryStub.class
+domain\services\AuthServiceTest.class
+infrastructure\repositories\InMemoryUrlRepositoryTest.class
+infrastructure\security\JwtServiceTest.class

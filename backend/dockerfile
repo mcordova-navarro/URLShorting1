@@ -1,16 +1,19 @@
-# Use an official Maven image as a parent image
-FROM maven:3.8.4-openjdk-17-slim
-# Set the working directory in the container
+FROM maven:3.9-eclipse-temurin-17 AS builder
+
 WORKDIR /app
-# Copy the pom.xml file
+
 COPY pom.xml .
-# Copy the rest of the application code
-COPY src ./src
-# Build the application
-RUN mvn package
-# Copy the built artifact from the build stage
-COPY --from=build /app/target/your-application.jar .
-# Expose the port the application runs on
+RUN mvn dependency:go-offline
+
+COPY . .
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8080
-# Command to run the application
-CMD ["java", "-jar", "target/your-application.jar"]
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
